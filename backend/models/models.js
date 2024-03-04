@@ -22,6 +22,7 @@ const orgDataSchema = new Schema(
 );
 
 // collection for app users
+// models.js
 const userDataSchema = new Schema(
   {
     _id: {
@@ -37,7 +38,7 @@ const userDataSchema = new Schema(
       required: true
     },
     role: {
-      type: String,
+      type: String, // or enum: ['viewer', 'editor'] based on your roles
       required: true
     },
     org: {
@@ -49,6 +50,7 @@ const userDataSchema = new Schema(
     collection: 'users'
   }
 );
+
 
 // collection for clients
 const clientDataSchema = new Schema(
