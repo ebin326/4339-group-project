@@ -31,11 +31,12 @@ router.post('/login', async (req, res) => {
       role: user.role
     };
 
-    // token expires in 30 days. This is not best security practice but still demonstrates how JWT work
+    // token expires in 30 days. This is not best security practice but still demonstrates how JWT works
     const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '30d' });
     res.json({ token });
   } catch (err) {
-    res.status(500).send('Server error');
+    console.error(err.message); // Log the error message for debugging
+    res.status(500).json({ message: 'Internal server error' }); // Send an appropriate response to the client
   }
 });
 
