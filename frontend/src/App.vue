@@ -1,4 +1,4 @@
-<!-- This is the main frontend file. It displays a navigation bar and rendered components. -->
+<!-- app.vue -->
 
 <template>
   <main class="flex flex-row">
@@ -7,7 +7,7 @@
         <section class="text-center">
           <img class="m-auto" src="@\assets\DanPersona.svg" />
         </section>
-        <!--Navigation bar-->
+        <!-- Navigation bar -->
         <nav class="mt-10">
           <ul class="flex flex-col gap-4">
             <!-- Dashboard link -->
@@ -17,54 +17,54 @@
                 Dashboard
               </router-link>
             </li>
-            <!--Login link - Link only shows is user is logged out-->
+            <!-- Login link - Link only shows if the user is logged out -->
             <li v-if="!user.isLoggedIn">
               <router-link to="/login">
                 <span style="position:relative; top: 6px" class="material-icons">login</span>
                 Login
               </router-link>
             </li>
-            <!--Logout link - Link only shows is user is logged in-->
+            <!-- Logout link - Link only shows if the user is logged in -->
             <li v-if="user.isLoggedIn" @click.prevent="user.logout" style="cursor: pointer;">
               <span style="position:relative; top: 6px" class="material-icons">logout</span>
               Logout
             </li>
-            <!--Client Intake Form link - only shows if user is an editor-->
-            <li v-if="user.role === 'editor'">
+            <!-- Client Intake Form link - only shows if the user is an editor -->
+            <li v-if="user.isLoggedIn && user.role === 'editor'">
               <router-link to="/clientform">
                 <span style="position: relative; top: 6px" class="material-icons">people</span>
                 Client Intake Form
               </router-link>
             </li>
-            <!--Create Event link - only shows if user is an editor-->
-            <li v-if="user.role === 'editor'">
+            <!-- Create Event link - only shows if the user is an editor -->
+            <li v-if="user.isLoggedIn && user.role === 'editor'">
               <router-link to="/eventform">
                 <span style="position: relative; top: 6px" class="material-icons">event</span>
                 Create Event
               </router-link>
             </li>
-            <!--Create Service link - only shows if user is an editor-->
-            <li v-if="user.role === 'editor'">
+            <!-- Create Service link - only shows if the user is an editor -->
+            <li v-if="user.isLoggedIn && user.role === 'editor'">
               <router-link to="/serviceform">
                 <span style="position: relative; top: 6px" class="material-icons">volunteer_activism</span>
                 Create Service
               </router-link>
             </li>
-            <!--Find Client link - only shows if user is logged in-->
+            <!-- Find Client link - only shows if the user is logged in -->
             <li v-if="user.isLoggedIn">
               <router-link to="/findclient">
                 <span style="position: relative; top: 6px" class="material-icons">search</span>
                 Find Client
               </router-link>
             </li>
-            <!--Find Event link - only shows if user is logged in-->
+            <!-- Find Event link - only shows if the user is logged in -->
             <li v-if="user.isLoggedIn">
               <router-link to="/findevents">
                 <span style="position: relative; top: 6px" class="material-icons">search</span>
                 Find Event
               </router-link>
             </li>
-            <!--Find Service link - only shows if user is logged in-->
+            <!-- Find Service link - only shows if the user is logged in -->
             <li v-if="user.isLoggedIn">
               <router-link to="/findservice">
                 <span style="position: relative; top: 6px" class="material-icons">search</span>
@@ -76,12 +76,12 @@
       </header>
     </div>
     <div class="grow w-4/5">
-      <!--Organization Name Header-->
+      <!-- Organization Name Header -->
       <section class="justify-end items-center h-24 flex"
         style="background: linear-gradient(250deg, #c8102e 70%, #efecec 50.6%)">
         <h1 class="mr-20 text-3xl text-white"> {{ orgName }}</h1>
       </section>
-      <!--Page Content-->
+      <!-- Page Content -->
       <div>
         <router-view></router-view>
       </div>
@@ -90,8 +90,8 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
 import { useLoggedInUserStore } from './store/loggedInUser';
+import { reactive, watchEffect } from 'vue'; // Add this line
 import { getOrgName } from './api/api';
 import { useToast } from 'vue-toastification';
 
@@ -101,17 +101,17 @@ const toast = useToast();
 export default {
   setup() {
     const user = useLoggedInUserStore();
-    const orgName = ref("Dataplatform");
+    const state = reactive({ orgName: "Dataplatform" });
 
-    onMounted(async () => {
+    watchEffect(async () => {
       try {
-        orgName.value = await getOrgName();
-      } catch (error) {
-        throw error;
+        state.orgName = await getOrgName();
+      } catch {
+        throw (error);
       }
     });
 
-    return { user, orgName };
+    return { user, state };
   },
   methods: {
     logout() {
@@ -122,8 +122,8 @@ export default {
         toast.error('logout error', error);
       }
     },
-  },
-};
+  }
+}
 </script>
 
 <style scoped>
