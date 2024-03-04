@@ -90,41 +90,40 @@
 </template>
 
 <script>
-import { useLoggedInUserStore } from './store/loggedInUser'
-import { getOrgName } from './api/api'
-import { useToast } from 'vue-toastification'
+import { ref, onMounted } from 'vue';
+import { useLoggedInUserStore } from './store/loggedInUser';
+import { getOrgName } from './api/api';
+import { useToast } from 'vue-toastification';
 
-//Notifications
-const toast = useToast()
+// Notifications
+const toast = useToast();
 
 export default {
   setup() {
     const user = useLoggedInUserStore();
-    return { user };
-  },
-  data() {
-    return {
-      orgName: "Dataplatform",
-    };
-  },
-  async created() {
-    try {
-      this.orgName = await getOrgName();
-    } catch {
-      throw (error)
-    }
+    const orgName = ref("Dataplatform");
+
+    onMounted(async () => {
+      try {
+        orgName.value = await getOrgName();
+      } catch (error) {
+        throw error;
+      }
+    });
+
+    return { user, orgName };
   },
   methods: {
     logout() {
       try {
         this.$store.dispatch('clearSessionData');
-        this.$router.push('/')
+        this.$router.push('/');
       } catch (error) {
-        toast.error('logout error', error)
+        toast.error('logout error', error);
       }
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
