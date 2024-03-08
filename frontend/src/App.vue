@@ -1,5 +1,3 @@
-<!-- app.vue -->
-
 <template>
   <main class="flex flex-row">
     <div id="_container" class="min-h-screen">
@@ -25,7 +23,7 @@
               </router-link>
             </li>
             <!-- Logout link - Link only shows if the user is logged in -->
-            <li v-if="user.isLoggedIn" @click.prevent="user.logout" style="cursor: pointer;">
+            <li v-if="user.isLoggedIn" @click.prevent="logout" style="cursor: pointer;">
               <span style="position:relative; top: 6px" class="material-icons">logout</span>
               Logout
             </li>
@@ -79,7 +77,7 @@
       <!-- Organization Name Header -->
       <section class="justify-end items-center h-24 flex"
         style="background: linear-gradient(250deg, #c8102e 70%, #efecec 50.6%)">
-        <h1 class="mr-20 text-3xl text-white"> {{ orgName }}</h1>
+        <h1 class="mr-20 text-3xl text-white"> {{ state.orgName }}</h1>
       </section>
       <!-- Page Content -->
       <div>
@@ -91,7 +89,7 @@
 
 <script>
 import { useLoggedInUserStore } from './store/loggedInUser';
-import { reactive, watchEffect } from 'vue'; // Add this line
+import { reactive, watchEffect } from 'vue';
 import { getOrgName } from './api/api';
 import { useToast } from 'vue-toastification';
 
@@ -106,24 +104,23 @@ export default {
     watchEffect(async () => {
       try {
         state.orgName = await getOrgName();
-      } catch {
-        throw (error);
+      } catch (error) {
+        // Handle error if needed
       }
     });
 
-    return { user, state };
-  },
-  methods: {
-    logout() {
+    const logout = () => {
       try {
-        this.$store.dispatch('clearSessionData');
-        this.$router.push('/');
+        // Assuming this method is available in your store
+        user.logout();
       } catch (error) {
         toast.error('logout error', error);
       }
-    },
-  }
-}
+    };
+
+    return { user, state, logout };
+  },
+};
 </script>
 
 <style scoped>
