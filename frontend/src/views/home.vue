@@ -71,7 +71,7 @@
           <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">
               Clients by Zip Code
           </h1>
-          
+
           <div v-if="!zips.length" class="flex justify-center mt-10">No clients found.</div>
           <table v-if="zips.length" class="min-w-full shadow-md rounded">
             <thead class="bg-gray-50 text-xl">
@@ -127,98 +127,125 @@
 <script>
 import AttendanceChart from '../components/barChart.vue'
 import ZipChart from '../components/donutZipChart.vue'
-import { getAttendance, getClientsByZipCode } from '../api/api'
+// import { getAttendance, getClientsByZipCode } from '../api/api'
 
 export default {
   components: {
     AttendanceChart,
     ZipChart,
   },
+
   data() {
     return {
-      recentEvents: [],
-      zips: [],
-      labels: [],
-      chartData: [],
-      zipLabels: [],
-      zipChartData: [],
+      recentEvents: [
+        // Dummy event data
+        { _id: 1, name: 'Event 1', date: '2022-03-01T12:00:00Z', attendees: ['John', 'Jane', 'Doe'] },
+        { _id: 2, name: 'Event 2', date: '2022-03-02T12:00:00Z', attendees: ['Alice', 'Bob', 'Charlie'] },
+        // Add more dummy events as needed
+      ],
+      zips: [
+        // Dummy zip code data
+        { _id: '12345', count: 20 },
+        { _id: '67890', count: 30 },
+        { _id: '54321', count: 40 },
+        { _id: '98765', count: 50 },
+        { _id: '13579', count: 60 },
+        // Add more dummy zip codes as needed
+      ],
       loading: false,
       error: null,
       zipLoading: false,
-      zipError: null
-    }
+      zipError: null,
+    };
   },
+
+  // mounted() {
+  //   //Assuming you still want to load data on mount, you can call your methods here
+  //   this.getAttendanceData();
+  //   this.getZipData();
+  // },
   mounted() {
-    this.getAttendanceData()
-    this.getZipData()
-  },
+  // Directly assign hardcoded data instead of making API calls
+  this.recentEvents = [
+  ];
+
+  this.zips = [
+  ];
+
+  // Assuming you want to generate the charts immediately on mount
+  this.generateAttendanceChart();
+  this.generateZipChart();
+},
+
   methods: {
     async getAttendanceData() {
       try {
-        this.error = null
-        this.loading = true
-        
+        this.error = null;
+        this.loading = true;
+
         const attendance = await getAttendance();
         this.recentEvents = attendance;
         this.labels = attendance.map(
           (item) => `${item.name} (${this.formatDate(item.date)})`
-        )
-        this.chartData = attendance.map((item) => item.attendees.length)
+        );
+        this.chartData = attendance.map((item) => item.attendees.length);
       } catch (err) {
         if (err.response) {
           // client received an error response (5xx, 4xx)
           this.error = {
             title: 'Server Response',
-            message: err.message
-          }
+            message: err.message,
+          };
         } else if (err.request) {
           // client never received a response, or request never left
           this.error = {
             title: 'Unable to Reach Server',
-            message: err.message
-          }
+            message: err.message,
+          };
         } else {
           // There's probably an error in your code
           this.error = {
             title: 'Application Error',
-            message: err.message
-          }
+            message: err.message,
+          };
         }
       }
-      this.loading = false
+      this.loading = false;
     },
+
     async getZipData() {
       try {
-        this.zipError = null
-        this.zipLoading = true
-        
+        this.zipError = null;
+        this.zipLoading = true;
+
         const zipdata = await getClientsByZipCode();
         this.zips = zipdata;
-        this.zipLabels = zipdata.map((item) => item._id)
-        this.zipChartData = zipdata.map((item) => item.count)
+        this.zipLabels = zipdata.map((item) => item._id);
+        this.zipChartData = zipdata.map((item) => item.count);
       } catch (err) {
         if (err.response) {
           // client received an error response (5xx, 4xx)
           this.zipError = {
             title: 'Server Response',
-            message: err.message
-          }
+            message: err.message,
+          };
         } else if (err.request) {
           // client never received a response, or request never left
           this.zipError = {
             title: 'Unable to Reach Server',
-            message: err.message
-          }
+            message: err.message,
+          };
         } else {
           // There's probably an error in your code
           this.zipError = {
             title: 'Application Error',
-            message: err.message
-          }
+            message: err.message,
+          };
         }
       }
-      this.zipLoading = false
+      this.zipLoading = false;
     },
+
     // method called to format the event date
     formatDate(date) {
       const isoDate = new Date(date);
@@ -227,6 +254,7 @@ export default {
       const day = String(isoDate.getUTCDate()).padStart(2, '0');
       return `${month}/${day}/${year}`;
     },
-  }
-}
+},
+};
 </script>
+
