@@ -33,6 +33,7 @@
 
 <script>
   import { useLoggedInUserStore } from "../store/loggedInUser";
+  import { useRouter } from 'vue-router';
 
   export default {
     data() {
@@ -43,8 +44,19 @@
     },
     setup() {
       const store = useLoggedInUserStore();
+      const router = useRouter();
+      //Add a redirect function to the home page after a successful login
+      
+      const login = async () => {
+        await store.login(this.username, this.password);
+        if (store.isLoggedIn) {
+          router.push('/');
+        }
+      };
+
       return {
-        store
+        store,
+        login
       }
     }
   }
