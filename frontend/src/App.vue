@@ -89,7 +89,7 @@
 
 <script>
 import { useLoggedInUserStore } from './store/loggedInUser';
-import { reactive, watchEffect } from 'vue';
+import { reactive, watch } from 'vue'; // Changed import statement
 import { getOrgName } from './api/api';
 import { useToast } from 'vue-toastification';
 
@@ -101,11 +101,14 @@ export default {
     const user = useLoggedInUserStore();
     const state = reactive({ orgName: "Dataplatform" });
 
-    watchEffect(async () => {
-      try {
-        state.orgName = await getOrgName();
-      } catch (error) {
-        // Handle error if needed
+    watch(() => user.isLoggedIn, async (newValue) => { // Changed from watchEffect to watch
+      if (newValue) {
+        try {
+          state.orgName = await getOrgName();
+        } catch (error) {
+          // Handle error if needed
+          toast.error('Error occurred while fetching organization name', error);
+        }
       }
     });
 
@@ -122,6 +125,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 #_container {
