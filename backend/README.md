@@ -11,7 +11,7 @@ Install all dependencies.
 ### Before startup
 You need to setup a MongoDB database (can be local or remote).
 
-Make sure you have a collection named 'org' in your database that contains at least one organization with the orgid listed in your environment variable (see below).
+Make sure you have a collection named 'org' in your database that contains at least one organization with the org_id listed in your environment variable (see below).
 
 An example document inside the org collection in the DB could look like:
 ```
@@ -21,31 +21,38 @@ An example document inside the org collection in the DB could look like:
 }
 ```
 
-The database also needs to contain users with hashed passwords and their role. We provide a sample script to create hashed passwords. Please read more about hased password with bcrypt https://heynode.com/blog/2020-04/salt-and-hash-passwords-bcrypt/. There should be at least one user with the viewer role and one with the editor role.
+The database also needs to contain users with hashed passwords and their role. We provide a sample script to create hashed passwords. Please read more about hashed password with bcrypt https://heynode.com/blog/2020-04/salt-and-hash-passwords-bcrypt/. There should be at least one user with the viewer role and one with the editor role.
 
-An example document inside the 'users' collection in the DB could look like:
+Two documents inside the 'users' collection in the DB are:
 ```
 {
-    "_id" : ObjectId("64e03e5e3cc28d0886756963"),
-    "username" : "marry",
+    "_id" : ObjectId("662d6fde534d06709c0b697d"),
+    "username" : "user",
+    "role" : "viewer",
+    "password" : "$2b$10$57MGZOViFcB3EkR5qv6Que6ql2WkZ.nH7KO2wRm3MkMZHhvdzeXce",
+    "org" : ObjectId("65f4e2e1daf1992ce41df291")
+}
+{
+    "_id" : ObjectId("662d7811637c4e0fc719ad0c"),
+    "username" : "admin",
     "role" : "editor",
-    "password" : "$2b$10$Vt4jS2ORVImiuyhvAbS1DO8tnEUB0buUUadpFVoho6TfJXzKbRi8a",
-    "org" : ObjectId("64e0380b3cc28d087655693b")
+    "password" : "$2b$10$s1mhi17URib6kbZKXWIwyuidJ6favhYk6wGgjhk.sVIU/cyxjPWuG",
+    "org" : ObjectId("65f4e2e1daf1992ce41df291")
 }
 ```
 
 Setup a .env file with the following variables: MONGO_URL, PORT, ORG_ID and JWT_SECRET
 
-    MONGO_URL= that is the Mongo URL connection string
-    PORT= e.g.3000
-    ORG_ID = that is the orgid
-    JWT_SECRET=this can be a randomly generated string. It is used to verify JWT tokens
+    MONGO_URL=mongodb+srv://nmnguy21:CIS4339%40@cis4339.clicqhg.mongodb.net/CIS4339
+    PORT=3000
+    ORG_ID=65f4e2e1daf1992ce41df291
+    JWT_SECRET=R5kG8zXmPb2QJv6FsNtL3HjC9yWx4TdU     //It is used to verify JWT tokens
 
 ### Compiles and hot-reloads for development
 
-To start up the backend for devlopment run:
+To start up the backend for development run:
 
-    npm start
+    node app.js
 
 ## Postman Documentation
 
