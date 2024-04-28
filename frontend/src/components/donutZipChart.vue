@@ -1,28 +1,48 @@
 <template>
-  <div class="chartbox">
-    <!-- canvas element for chart -->
-    <canvas id="doughnut-chart"></canvas>
+  <div class="w-1/2">
+    <canvas class="p-10" ref="zipChart"></canvas>
   </div>
 </template>
 
 <script>
 import { Chart, registerables } from 'chart.js'
-import { Colors } from 'chart.js';
-import doughnutChartData from '../assets/zipcode-data.js'
-
 Chart.register(...registerables)
-Chart.register(Colors);
+//define props (label and chartData)
 export default {
-  name: 'doughnutChart',
-  data() {
-    return {
-      doughnutChartData: doughnutChartData
+  props: {
+    label: {
+      type: Array
+    },
+    chartData: {
+      type: Array
     }
   },
-  //establish Chart object after mounting the component
-  mounted() {
-    const ctx = document.getElementById('doughnut-chart')
-    new Chart(ctx, this.doughnutChartData)
-  }
+  async mounted() { //uses the data to load the chart's values
+    await new Chart(this.$refs.zipChart, {
+      type: 'doughnut',
+      data: {
+        labels: this.label,
+        datasets: [
+          {
+            borderWidth: 1,
+            data: this.chartData // Update this line
+          }
+        ]
+      },
+      options: {
+        plugins: {
+          legend: {
+            display: false
+          },
+          title: {
+            display: true,
+            text: 'Clients by Zip Code'
+          }
+        },
+        responsive: true,
+        maintainAspectRatio: true
+      }
+    })
+  },
 }
 </script>
