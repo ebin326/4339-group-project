@@ -34,3 +34,7 @@ PORT= 3000
 ORG_ID = 65f4e2e1daf1992ce41df291
 JWT_SECRET= "65f4e2e1daf1992ce41df291"
 ```
+
+# Postman Documentation
+The link for the postman documentiaotn can be found below
+<https://documenter.getpostman.com/view/30108369/2sA3JDg4i3#63a10f2a-18aa-4c0f-a8ac-79314391b74d>
