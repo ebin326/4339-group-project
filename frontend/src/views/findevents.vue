@@ -80,11 +80,18 @@
         </table>
       </div>
     </div>
+    <div>
+    <button @click="exportEventsToCSV" 
+    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" 
+    type="submit">
+      Export Events as CSV
+    </button>
+  </div>
   </main>
 </template>
 
 <script>
-import { getEvents, searchEvents } from '../api/api'
+import { getEvents, searchEvents, exportEventsToCSV } from '../api/api'
 import { useToast } from 'vue-toastification'
 
 //Notifications
@@ -168,6 +175,13 @@ export default {
       const month = String(isoDate.getUTCMonth() + 1).padStart(2, '0');
       const day = String(isoDate.getUTCDate()).padStart(2, '0');
       return `${month}/${day}/${year}`;
+    },
+    async exportEventsToCSV() {
+      try {
+        await exportEventsToCSV();
+      } catch (error) {
+        console.error("Error exporting Event data to CSV:", error);
+      }
     },
   },
 }

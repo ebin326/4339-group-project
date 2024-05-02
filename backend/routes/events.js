@@ -10,6 +10,10 @@ const authMiddleWare = require("../auth/authMiddleWare");
 // importing data model schemas
 const { events, clients } = require("../models/models");
 
+// imports for make a csv
+const json2csv = require('json2csv').parse;
+const fs = require('fs');
+
 // API endpoint to get all events for org
 router.get("/", authMiddleWare, (req, res, next) => {
   events
@@ -249,6 +253,33 @@ router.get("/attendance", (req, res, next) => {
       }
     })
     .sort({ date: 1 });
+});
+
+// GET events to make into CSV
+router.get('/exportEvents', authMiddleWare, (req, res, next) => {
+  events.find({}, (error, data) => {
+    if (error) {
+      return next(error);
+    }
+
+    const eventsData = data.map(event => ({
+      name: event.name,
+      date: event.date,
+      address: event.address?.line1 || '',
+      city: event.address?.city || '',
+    }));
+
+    const fields = ['name', 'date', 'address', 'city'];
+
+    const csv = json2csv(eventsData, { fields });
+
+    fs.writeFile('events.csv', csv, (err) => {
+      if (err) {
+        return res.status(500).send('Error exporting data to CSV');
+      }
+      res.download('events.csv'); // Download the CSV file
+    });
+  });
 });
 
 module.exports = router;

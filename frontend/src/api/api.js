@@ -404,3 +404,22 @@ export async function exportClientsToCSV() {
     console.error("Error exporting clients data to CSV:", error);
   }
 }
+
+// api to export events as CSV
+export async function exportEventsToCSV() {
+  try {
+    const response = await apiClient.get("/events/exportEvents", {
+      responseType: 'blob', // Specify response type as blob to handle file download
+    });
+    
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'events.csv');
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  } catch (error) {
+    console.error("Error exporting events data to CSV:", error);
+  }
+}
