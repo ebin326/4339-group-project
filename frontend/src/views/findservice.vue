@@ -80,11 +80,18 @@
         </table>
       </div>
     </div>
+    <div>
+    <button @click="exportServicesToCSV" 
+    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" 
+    type="submit">
+      Export Services as CSV
+    </button>
+  </div>
   </main>
 </template>
 
 <script>
-import { getServices, searchServices } from '../api/api'
+import { getServices, searchServices, exportServicesToCSV } from '../api/api'
 import { useToast } from 'vue-toastification'
 
 //Notifications
@@ -154,6 +161,13 @@ export default {
             toast.error('Error searching services:', error)
           }
         }
+      }
+    },
+    async exportServicesToCSV() {
+      try {
+        await exportServicesToCSV();
+      } catch (error) {
+        console.error("Error exporting Services data to CSV:", error);
       }
     },
   },

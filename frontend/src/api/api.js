@@ -423,3 +423,21 @@ export async function exportEventsToCSV() {
     console.error("Error exporting events data to CSV:", error);
   }
 }
+// api to export services as CSV
+export async function exportServicesToCSV() {
+  try {
+    const response = await apiClient.get("/services/exportServices", {
+      responseType: 'blob', // Specify response type as blob to handle file download
+    });
+    
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'services.csv');
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  } catch (error) {
+    console.error("Error exporting services data to CSV:", error);
+  }
+}

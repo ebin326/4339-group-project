@@ -11,6 +11,11 @@ const authMiddleWare = require('../auth/authMiddleWare');
 // org id from environment
 const org = process.env.ORG_ID;
 
+// imports for make a csv
+const json2csv = require('json2csv').parse;
+const fs = require('fs');
+
+
 // API endpoint to all services for org
 router.get('/', authMiddleWare, (req, res, next) => {
   services
@@ -120,6 +125,32 @@ router.delete('/:id', authMiddleWare, async (req, res, next) => {
         }
       );
     }
+  });
+});
+
+// GET services to make into CSV
+router.get('/exportServices', authMiddleWare, (req, res, next) => {
+  services.find({}, (error, data) => {
+    if (error) {
+      return next(error);
+    }
+
+    const servicesData = data.map(service => ({
+      name: service.name,
+      description: service.description,
+      status: service.status
+    }));
+
+    const fields = ['name', 'description', 'status'];
+
+    const csv = json2csv(servicesData, { fields });
+
+    fs.writeFile('services.csv', csv, (err) => {
+      if (err) {
+        return res.status(500).send('Error exporting data to CSV');
+      }
+      res.download('services.csv'); // Download the CSV file
+    });
   });
 });
 
