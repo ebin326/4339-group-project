@@ -55,5 +55,5 @@ To start up the backend for development run:
     node app.js
 
 ## Postman Documentation
-
-More details about the API endpoints can be be found at <https://documenter.getpostman.com/view/25012176/2s9Y5Zv1xz>
+The link for the postman documentiaotn can be found below
+<https://documenter.getpostman.com/view/30108369/2sA3JDg4i3#63a10f2a-18aa-4c0f-a8ac-79314391b74d>
