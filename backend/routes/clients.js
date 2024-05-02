@@ -14,6 +14,10 @@ const { ObjectId } = require('mongodb');
 // reading the org id from the environment variable
 const org = process.env.ORG_ID;
 
+// imports for make a csv
+const json2csv = require('json2csv').parse;
+const fs = require('fs');
+
 // API Endpoint to Get all clients
 router.get('/', authMiddleWare, async (req, res) => {
   try {
@@ -170,4 +174,37 @@ router.get('/byzip', (req, res, next) => {
   );
 });
 
+// GET clients to make into CSV
+router.get('/exportClients', authMiddleWare, (req, res, next) => {
+  clients.find({}, (error, data) => {
+    if (error) {
+      return next(error);
+    }
+
+    const clientsData = data.map(client => ({
+      firstName: client.firstName,
+      lastName: client.lastName,
+      email: client.email || '',
+      'phoneNumber.primary': client.phoneNumber?.primary || '',
+      'address.line1': client.address?.line1 || '',
+      'address.city': client.address?.city || '',
+      'address.county': client.address?.county || '',
+      'address.zip': client.address?.zip || ''
+    }));
+
+    const fields = ['firstName', 'lastName', 'email', 'phoneNumber.primary', 'address.line1', 'address.city', 'address.county', 'address.zip'];
+
+    const csv = json2csv(clientsData, { fields });
+
+    fs.writeFile('clients.csv', csv, (err) => {
+      if (err) {
+        return res.status(500).send('Error exporting data to CSV');
+      }
+      res.download('clients.csv'); // Download the CSV file
+    });
+  });
+});
+
+
 module.exports = router;
+

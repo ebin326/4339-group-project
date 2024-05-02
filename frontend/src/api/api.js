@@ -385,3 +385,22 @@ export const deleteService = async (id) => {
     throw error.response.data;
   }
 };
+
+// api to export as CSV
+export async function exportClientsToCSV() {
+  try {
+    const response = await apiClient.get("/clients/exportClients", {
+      responseType: 'blob', // Specify response type as blob to handle file download
+    });
+    
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'clients.csv');
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  } catch (error) {
+    console.error("Error exporting clients data to CSV:", error);
+  }
+}

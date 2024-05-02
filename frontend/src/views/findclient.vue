@@ -92,11 +92,18 @@
         </table>
       </div>
     </div>
+    <div>
+    <button @click="exportClientsToCSV" 
+    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4" 
+    type="submit">
+      Export Clients as CSV
+    </button>
+  </div>
   </main>
 </template>
 
 <script>
-import { getClients, searchClients } from '../api/api'
+import { getClients, searchClients, exportClientsToCSV } from '../api/api'
 import { useToast } from 'vue-toastification'
 
 //Notifications
@@ -168,6 +175,13 @@ export default {
             toast.error(error)
           }
         }
+      }
+    },
+    async exportClientsToCSV() {
+      try {
+        await exportClientsToCSV();
+      } catch (error) {
+        console.error("Error exporting clients data to CSV:", error);
       }
     },
   },
