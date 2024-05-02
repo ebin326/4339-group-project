@@ -24,3 +24,13 @@ Follow instructions in backend README for setup and running as a local instance.
 cd frontend
 ```
 Follow instructions in frontend README for setup and running as a local instance.
+
+
+# For the profosser
+Backend env file
+``
+MONGO_URL=  'mongodb+srv://ebin326:LuVQBcUhqc1IX8yB@cis4339.clicqhg.mongodb.net/CIS4339'
+PORT= 3000
+ORG_ID = 65f4e2e1daf1992ce41df291
+JWT_SECRET= "65f4e2e1daf1992ce41df291"
+```
