@@ -169,6 +169,23 @@
             Delete Client
           </button>
         </div>
+
+        <div class="flex justify-between mt-10 mr-20">
+          <!-- Mobile Notify button -->
+          <div class="flex justify-between mt-5 mr-20">
+            <button @click="mobileNotify" type="button" class="bg-blue-500 disabled:opacity-50 text-white rounded"
+              :disabled="user.role === 'viewer'">
+              Mobile Notify
+            </button>
+          </div>
+          <!-- Email Notify button -->
+          <div class="flex justify-between mt-5 mr-20">
+            <button @click="emailNotify" type="button" class="bg-blue-500 disabled:opacity-50 text-white rounded"
+              :disabled="user.role === 'viewer'">
+              Email Notify
+            </button>
+          </div>
+        </div>
         <!--Go back button-->
         <div class="flex justify-between mt-10 mr-20">
           <button type="reset" class="border border-red-700 bg-white text-red-700 rounded" @click=this.$router.back()>
@@ -411,6 +428,61 @@ export default {
         this.$router.push('/findclient')
       } catch (error) {
         toast.error(error);
+      }
+    },
+    // Mobile Notify method
+    async mobileNotify() {
+      try {
+        const phoneNumber = this.client.phoneNumber.primary;
+        const eventDetails = this.clientEvents.map((event) => `${event.name} (${this.formatDate(event.date)})`);
+
+        // Prepare the message content
+        const message = `Dear ${this.client.firstName},\n\nYou are registered for the following events:\n${eventDetails.join('\n')}\n\nThank you!`;
+
+        // Send the SMS notification using Twilio
+        const accountSid = 'YOUR_TWILIO_ACCOUNT_SID'; //Replace with your Twilio account SID
+        const authToken = 'YOUR_TWILIO_AUTH_TOKEN'; //Replace with your Twilio auth token
+        const client = twilio(accountSid, authToken);
+
+        await client.messages.create({
+          body: message,
+          from: 'YOUR_TWILIO_PHONE_NUMBER', //Replace with your Twilio phone number
+          to: phoneNumber,
+        });
+
+        toast.success('Mobile notification sent successfully');
+      } catch (error) {
+        toast.error('Failed to send mobile notification');
+        console.error(error);
+      }
+    },
+
+    // Email Notify method
+    async emailNotify() {
+      try {
+        const email = this.client.email;
+        const eventDetails = this.clientEvents.map((event) => `${event.name} (${this.formatDate(event.date)})`);
+
+        // Prepare the email content
+        const subject = 'Event Notification';
+        const body = `Dear ${this.client.firstName},<br><br>You are registered for the following events:<br>${eventDetails.join('<br>')}<br><br>Thank you!`;
+
+        // Send the email notification using SendGrid
+        sgMail.setApiKey('YOUR_SENDGRID_API_KEY'); //Replace with your SendGrid API key
+
+        const msg = {
+          to: email,
+          from: 'YOUR_EMAIL', //The email address you want to use as the sender for email notifications
+          subject: subject,
+          html: body,
+        };
+
+        await sgMail.send(msg);
+
+        toast.success('Email notification sent successfully');
+      } catch (error) {
+        toast.error('Failed to send email notification');
+        console.error(error);
       }
     },
   }
