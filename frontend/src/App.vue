@@ -69,27 +69,7 @@
                 Find Service
               </router-link>
             </li>
-            <!-- Event Details link - only shows if the user is logged in -->
-            <li v-if="user.isLoggedIn">
-              <router-link to="/clientdetails/:id">
-                <span style="position: relative; top: 6px" class="material-icons">person</span>
-                Client Details
-              </router-link>
-            </li>
-            <!-- Event Details link - only shows if the user is logged in -->
-            <li v-if="user.isLoggedIn">
-              <router-link to="/eventdetails/:id">
-                <span style="position: relative; top: 6px" class="material-icons">event_note</span>
-                Event Details
-              </router-link>
-            </li>
-            <!-- Service Details link - only shows if the user is logged in -->
-            <li v-if="user.isLoggedIn">
-              <router-link to="/servicedetails/:id">
-                <span style="position: relative; top: 6px" class="material-icons">info</span>
-                Service Details
-              </router-link>
-            </li>
+            
           </ul>
         </nav>
       </header>
