@@ -1,6 +1,8 @@
 <!-- This is the home view - which shows a dashboard -->
 <template>
   <main>
+    <!-- Add the print button -->
+    <button @click="printPage" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4">Print</button>
     <div>
       <h1 class="font-bold text-4xl text-red-700 tracking-widest text-center mt-10">
         Dashboard
@@ -226,6 +228,9 @@ export default {
       const month = String(isoDate.getUTCMonth() + 1).padStart(2, '0');
       const day = String(isoDate.getUTCDate()).padStart(2, '0');
       return `${month}/${day}/${year}`;
+    },
+    printPage() {
+      window.print();
     },
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <main class="flex flex-row">
-    <div id="_container" class="min-h-screen">
+    <div id="_container" class="min-h-screen nav-sidebar">
       <header class="w-full">
         <section class="text-center">
           <img class="m-auto" src="@\assets\DanPersona.svg" />
@@ -133,5 +133,11 @@ export default {
   background-color: #c8102e;
   color: white;
   padding: 18px;
+}
+
+@media print {
+  .nav-sidebar {
+    display: none;
+  }
 }
 </style>
